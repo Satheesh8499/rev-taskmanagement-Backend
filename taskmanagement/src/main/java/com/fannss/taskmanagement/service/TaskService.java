@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,7 +63,7 @@ public class TaskService {
             throw new RuntimeException("User not authorized to delete this task");
         }
     }
-    public Task updateTask(Long id, TaskDTO taskDetails) {
+    public TaskDTO updateTask(Long id, TaskDTO taskDetails) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found with id " + id));
 
@@ -74,7 +77,8 @@ public class TaskService {
         task.setAssignedTo(task.getAssignedTo());
         task.setCreatedBy(task.getCreatedBy());
 
-        return taskRepository.save(task);
+        Task t= taskRepository.save(task);
+        return convertDTO(t);
     }
 
     public TaskDTO getTask(Long id) {
@@ -103,6 +107,7 @@ public class TaskService {
          task.setTaskName(taskDTO.getTaskName());
          task.setTaskDescription(taskDTO.getTaskDescription());
          task.setStatus(taskDTO.getStatus());
+         task.setStartDate(java.sql.Date.valueOf(LocalDate.now()));
          task.setPriority(taskDTO.getPriority());
          task.setDueDate(taskDTO.getDueDate());
          User assignTo=userRepository.getById(taskDTO.getAssignedTo());
@@ -118,5 +123,13 @@ public class TaskService {
          dto.setId(task.getId());
          dto.setTaskName(task.getTaskName());
          return  dto;
+    }
+    public List<TaskDTO> getAllTasksUsers(Long userId){
+            List<Task> tasks=taskRepository.findByAssignedToId(userId);
+            List<TaskDTO> ltd=new ArrayList<>();
+            for(Task t:tasks){
+                ltd.add(new TaskDTO(t));
+            }
+            return ltd;
     }
 }

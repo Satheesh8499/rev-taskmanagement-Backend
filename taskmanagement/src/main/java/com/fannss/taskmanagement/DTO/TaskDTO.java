@@ -1,5 +1,6 @@
 package com.fannss.taskmanagement.DTO;
 
+import com.fannss.taskmanagement.entity.Task;
 import lombok.Data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -26,6 +27,20 @@ public class TaskDTO {
     // Constructor
     public TaskDTO() {
         this.startDate = new Date(System.currentTimeMillis()); // Set startDate to the current date by default
+    }
+
+    public TaskDTO(Task task) {
+        this.id = task.getId();
+        this.projectId = task.getProject() != null ? task.getProject().getId() : null;
+        this.taskName = task.getTaskName();
+        this.taskDescription = task.getTaskDescription();
+        this.assignedBy = task.getCreatedBy() != null ? task.getCreatedBy().getId() : null;
+        this.assignedTo = task.getAssignedTo() != null ? task.getAssignedTo().getId() : null;
+        this.priority = task.getPriority();
+        this.status = task.getStatus();
+        this.startDate = task.getStartDate();
+        this.dueDate = task.getDueDate();
+        this.completedDate = task.getEndDate();
     }
 
     // Getters and setters

@@ -50,6 +50,15 @@ public class UserController {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
+    @GetMapping("/{id}/username")
+    public ResponseEntity<String> getUsernameById(@PathVariable Long id) {
+        Optional<User> userOptional = userService.getUserById(id);
+        if (userOptional.isPresent()) {
+            return ResponseEntity.ok(userOptional.get().getUsername());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     private static class UserResponse {
         private Long userId;

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
@@ -34,9 +36,9 @@ public class TaskController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDetails) {
-        Task updatedTask = taskService.updateTask(id, taskDetails);
-        return ResponseEntity.ok(updatedTask);
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDetails) {
+        TaskDTO  tdo = taskService.updateTask(id, taskDetails);
+        return ResponseEntity.ok(tdo);
     }
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getTask(@PathVariable Long id){
@@ -51,6 +53,14 @@ public class TaskController {
 
          TaskDTO task=taskService.createTaskByUser(userId,taskDTO);
          return  ResponseEntity.ok(task);
+    }
+
+
+    @GetMapping("/getTasks")
+    public ResponseEntity<List<TaskDTO>> getAllTasksByUser(
+            @RequestHeader("userId") Long userId){
+        List<TaskDTO> ltd=taskService.getAllTasksUsers(userId);
+        return  ResponseEntity.ok(ltd);
     }
 }
 

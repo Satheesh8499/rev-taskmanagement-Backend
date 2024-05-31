@@ -93,5 +93,8 @@ public class UserService {
         createUserDTO.role = user.getRole();
         return createUserDTO;
     }
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
+    }
 }
 
