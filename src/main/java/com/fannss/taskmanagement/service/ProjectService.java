@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,13 +90,18 @@ public class ProjectService {
                 .collect(Collectors.toList());
         projectDTO.setTeamMembers(teamMemberDTOs);
 
-        List<TaskDTO> taskDTOs = project.getTasks().stream()
+        // Add null check for tasks list
+        List<TaskDTO> taskDTOs = Optional.ofNullable(project.getTasks())
+                .orElseGet(Collections::emptyList)
+                .stream()
                 .map(this::convertTaskToDTO)
                 .collect(Collectors.toList());
         projectDTO.setTasks(taskDTOs);
 
         return projectDTO;
     }
+
+
 
     private UserDTO convertUserToDTO(User user) {
         UserDTO userDTO = new UserDTO();
